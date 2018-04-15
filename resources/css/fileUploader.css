@@ -1,0 +1,114 @@
+#uploadForm {border-top:#F0F0F0 2px solid;background:#FAF8F8;padding:10px;}
+
+#uploadForm label {margin:2px; font-size:1em; font-weight:bold;}
+
+#pagetitle img {
+	position : relative;
+	top:8px;
+}
+
+#progress-bar {
+	background-color: #12CC1A;
+	height:20px;
+	color: #FFFFFF;
+	width:0%;
+	-webkit-transition: width .3s;
+	-moz-transition: width .3s;
+	transition: width .3s;}
+
+#btnSubmit{
+	background-color:#09f;
+	border:0;padding:10px 40px;
+	color:#FFF;
+	border:#F0F0F0 1px solid;
+	border-radius:4px;
+	/*position: absolute;
+	top: 100px;
+	left: 10px;*/
+}
+
+#btnCancel{
+	background-color:#09f;
+	border:0;padding:10px 40px;
+	color:#FFF;
+	border:#F0F0F0 1px solid;
+	border-radius:4px;
+	/*position: absolute;
+	top: 100px;
+	left: 10px;*/
+}
+
+#progress-div {
+	background-color: black;
+	opacity : 0.5;
+	border:#0FA015 1px solid;
+	padding: 0px 0px;
+	margin:0px 0px;
+	border-radius:4px;
+	text-align:center;
+}
+
+#filesToUpload{
+	/*position: absolute;
+	top: 100px;
+	left: 200px;*/
+}
+
+.greenTick {
+	width:12px; /* you can use % */
+	height: auto;
+}
+
+#targetLayer{
+	width:100%;
+	text-align:center;
+}
+
+#fileList{
+	position:absolute;
+	top:185px;
+}
+
+#uploadStatus{
+	color:red;
+	margin-bottom: 10px;
+}
+
+#controls_container{
+	position:absolute;
+	top:140px;
+}
+
+html,
+body {
+	height:100%;
+	background-image: url("../images/bgpattern1.jpeg");
+}
+
+.mainTitle {
+	font-size:40px;
+	display:inline-block;
+}
+
+/*#pagetitle {
+	background-color: red;
+}*/
+
+.mainLayer {
+}
+
+.tStatus {
+	width : 100%;
+}
+
+.tText {
+	white-space: nowrap;
+}
+
+#fileListTable{
+	width:90%;
+}
+
+#fileListTable tr{
+	height: 24px;
+}
