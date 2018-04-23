@@ -6,16 +6,21 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<script src="http://malsup.github.com/jquery.form.js"></script>
 		<script>
-
+			//Concurrent uploads
+			document.concurrentUploads = 3;
 			//List of selected files
 			document.filesToUpload  = {};
 			//Uploader status and queue object
-			document.uploader = {status:'IDLE',queue:{}};
+			document.uploader = {
+				capacity:document.concurrentUploads,
+				queue:{}
+			};
+
 			//Set to 1 when user press upload;
 			document.uploaderRunning = 0;
 			//Uploader polling interval in miliseconds
 			document.pollingInterval = 1000;
-
+			
 			$(document).ready(function() {
 
 				window.setInterval(function(){
@@ -31,9 +36,9 @@
 
 
 			function processFileList() {
-
+				console.log("Uploader capacity = "+document.uploader['capacity']);
 				//If the uploader is idle then it can process a file
-				if (document.uploader.status == 'IDLE') {
+				if (document.uploader['capacity'] > 0) {
 					//Iterate through the list of selected files
 					for (i=0;i<document.filesToUpload.length;i++) {
 						//Find a file candidate to be sent
@@ -50,8 +55,8 @@
 
 			function sendFile(i){
 
-				//Processing file so we update the uploader status
-				document.uploader['status'] = 'BUSY';
+				//Processing file so we decrement uploader capacity
+				document.uploader['capacity']--;
 
 				var file = document.filesToUpload[i];
 				var data = new FormData();
@@ -107,7 +112,7 @@
 					},
 					complete:function(response) {
 						//Free the uploader so it can keep uploading files
-						document.uploader['status']='IDLE';
+						document.uploader['capacity']++;
 						console.log("Ajax request complete for file "+this.id.toString());
 
 						//Add success tick to the tables list
@@ -178,12 +183,9 @@
 				//List of selected files
 				document.filesToUpload  = {};
 				//Uploader status and queue object
-				document.uploader = {status:'IDLE',queue:{}};
+				document.uploader = {status:document.concurrentUploads,queue:{}};
 				//Set to 1 when user press upload;
 				document.uploaderRunning = 0;
-
-				//get the input and UL list
-				var input = document.getElementById('filesToUpload');
 
 				// Clean target layer
 				$('#targetLayer').empty();
