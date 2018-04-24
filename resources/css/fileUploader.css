@@ -7,7 +7,7 @@
 	top:8px;
 }
 
-#progress-bar {
+.progress-bar {
 	background-color: #12CC1A;
 	height:20px;
 	color: #FFFFFF;
@@ -38,7 +38,7 @@
 	left: 10px;*/
 }
 
-#progress-div {
+.progress-div {
 	background-color: black;
 	opacity : 0.5;
 	border:#0FA015 1px solid;

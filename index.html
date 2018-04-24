@@ -6,18 +6,8 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<script src="http://malsup.github.com/jquery.form.js"></script>
 		<script>
-			//Concurrent uploads
-			document.concurrentUploads = 3;
-			//List of selected files
-			document.filesToUpload  = {};
-			//Uploader status and queue object
-			document.uploader = {
-				capacity:document.concurrentUploads,
-				queue:{}
-			};
+			initUploader();
 
-			//Set to 1 when user press upload;
-			document.uploaderRunning = 0;
 			//Uploader polling interval in miliseconds
 			document.pollingInterval = 1000;
 			
@@ -52,6 +42,37 @@
 				}
 			}
 
+			// Iterates the xhr objects array and cancels every AJAX call
+			function cancelPendingAjax(){
+				if (document.xhrArray != undefined) {
+					for (i=0;i<document.xhrArray.length;i++) {
+						document.xhrArray[i].abort();}
+				} 
+			}
+
+
+			function initUploader(){
+	                        //Concurrent uploads
+	                        document.concurrentUploads = 3;
+        	                
+				//cancel pending AJAX calls
+				cancelPendingAjax();
+
+				//Array containing XHR objects
+				document.xhrArray = new Array(document.concurrentUploads)
+
+				//List of selected files
+                	        document.filesToUpload  = {};
+				//Uploader status and queue object
+                        	document.uploader = {
+                                	capacity:document.concurrentUploads,
+                                	queue:{}
+                        	};
+
+                        	//Set to 1 when user press upload;
+                        	document.uploaderRunning = 0;
+			}
+
 
 			function sendFile(i){
 
@@ -60,11 +81,12 @@
 
 				var file = document.filesToUpload[i];
 				var data = new FormData();
+				var progressBar_id = "progress-bar_"+i;
 
 				data.append('file',file);
 
 
-				$.ajax({
+				var xhr = $.ajax({
 					xhr: function() {
 						var xhr = new window.XMLHttpRequest();
 
@@ -72,8 +94,8 @@
 						xhr.upload.addEventListener("progress", function(evt){
 							if (evt.lengthComputable) {
 								var percentComplete = Math.round(100*(evt.loaded / evt.total));
-								$("#progress-bar").width(percentComplete + '%');
-								$("#progress-bar").html('<div id="progress-status">' + percentComplete +' %</div>');
+								$("#"+progressBar_id).width(percentComplete + '%');
+								$("#"+progressBar_id).html('<div class="progress-status">' + percentComplete +' %</div>');
 							}
 						}, false);
 
@@ -87,15 +109,15 @@
 					beforeSend: function() {
 						// We use this id to identify the response
 						this.id=i;
-						$("#progress-bar").width('0%');
+
 						document.uploader.queue[i]='SENDING';
 
 						//Add progress bar in the file table
 						var cell_id = "file_"+this.id.toString()+"_status"
-						$('#' + cell_id).html('<div id="progress-div"><div id="progress-bar"></div></div>');
+						$('#' + cell_id).html('<div class="progress-div"><div id="'+progressBar_id+'" class="progress-bar"></div></div>');
 
-						$("#progress-bar").width(0);
-						$("#progress-bar").html('<div id="progress-status">' + 0 +' %</div>')
+						$("#"+progressBar_id).width(0);
+						$("#"+progressBar_id).html('<div class="progress-status">' + 0 +' %</div>')
 
 						$("#uploadStatus").text("Uploading file:  "+file.name);
 
@@ -126,6 +148,9 @@
 
 					}
 				});
+
+				// Add xhr object to chrArray
+				document.xhrArray[i] = xhr;
 
 			}
 
@@ -180,12 +205,7 @@
 
 			function cancelButton() {
 
-				//List of selected files
-				document.filesToUpload  = {};
-				//Uploader status and queue object
-				document.uploader = {status:document.concurrentUploads,queue:{}};
-				//Set to 1 when user press upload;
-				document.uploaderRunning = 0;
+				initUploader();
 
 				// Clean target layer
 				$('#targetLayer').empty();
