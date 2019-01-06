@@ -3,9 +3,9 @@
 class DBOperations{
 
 	 private $host = '127.0.0.1';
-	 private $user = 'root';
+	 private $user = 'toperweb';
 	 private $db = 'toperweb';
-	 private $pass = '';
+	 private $pass = 'toperweb';
 	 private $conn;
 
 public function __construct() {
